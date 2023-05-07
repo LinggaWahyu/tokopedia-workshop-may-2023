@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"runtime/debug"
 )
 
 func panicHandleHTTP(command http.HandlerFunc) http.HandlerFunc {
@@ -12,6 +13,11 @@ func panicHandleHTTP(command http.HandlerFunc) http.HandlerFunc {
 			// Recover from panic to stop termination of the application
 
 			// TODO: setup recover function to recover from a panic
+			if r := recover(); r != nil {
+				fmt.Printf("Panic message: %+v\n", r)
+				
+				debug.PrintStack()
+			}
 		}()
 
 		// Execute HTTP function that has been wrapped
@@ -23,6 +29,10 @@ func registerRoutes(server *http.Server) {
 	// Create endpoint to test panic process and call HTTP wrapper function to wrap our process
 	// TODO: call HTTP wrapper function using http.Handle()
 	// TODO: write message to the client and execute panic to trigger termination of the application
+	http.Handle("/test", panicHandleHTTP(func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte("Hello World\n"))
+		panic("Panic Happens")
+	}))
 
 	server.Handler = http.DefaultServeMux
 }

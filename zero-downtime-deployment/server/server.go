@@ -30,8 +30,8 @@ func main() {
 
 	handlers := mux.NewRouter()
 	handlers.HandleFunc("/", func(res http.ResponseWriter, req *http.Request) {
-		io.WriteString(res, "Make it Happen\n")
-		// io.WriteString(res, "Make it Better\n")
+		// io.WriteString(res, "Make it Happen\n")
+		io.WriteString(res, "Make it Better\n")
 	})
 
 	srv := http.Server{

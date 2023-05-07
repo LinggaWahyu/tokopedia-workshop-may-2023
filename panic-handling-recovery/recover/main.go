@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"runtime/debug"
+)
 
 func firstFunction() {
 	// Defer the process of recovery
@@ -8,6 +11,11 @@ func firstFunction() {
 		// Recover from panic to stop termination of the application
 
 		// TODO: setup recover function to recover from a panic
+		if r := recover(); r != nil {
+			fmt.Printf("Panic message: %+v\n", r)
+			
+			debug.PrintStack()
+		}
 	}()
 	fmt.Println("First function called")
 	secondFunction()
